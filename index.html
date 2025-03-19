@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- displays site properly based on user's device -->
+  <meta name="description" content="Frontend Mentor | Todo app">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  <link rel="stylesheet" href="style.css">
+  <title>Frontend Mentor | Todo app</title>
+  <script type="module" src="./main.js" defer></script>
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    .attribution {
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .attribution a {
+      color: hsl(228, 45%, 44%);
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <h1>Todo</h1>
+      <section class="theme-toggle">
+        <label for="dark-theme">
+          <img src="./images/icon-moon.svg" alt="Moon">
+          <input type="radio" name="theme" id="dark-theme" checked>
+        </label>
+        <label for="light-theme">
+          <img src="./images/icon-sun.svg" alt="Sun">
+          <input type="radio" name="theme" id="light-theme">
+        </label>
+      </section>
+    </header>
+
+    <create-new-todo-component>
+      <template shadowrootmode="open">
+        <form class="create-new-todo">
+          <button aria-label="create-a-new-todo" type="submit"></button>
+          <label for="create-new-todo">
+            <input type="text" name="create-new-todo" id="create-new-todo" placeholder="Create a new todo...">
+          </label>
+        </form>
+        <style>
+          form[class="create-new-todo"] {
+            display: grid;
+            align-items: center;
+            background-color: var(--todo-background);
+            font-weight: 700;
+            box-sizing: border-box;
+            padding: 0 20px;
+            gap: 10px;
+            grid-template-columns: auto 1fr;
+            height: 100px;
+            width: var(--todo-width);
+          }
+
+          button[aria-label="create-a-new-todo"] {
+            appearance: none;
+            border: 1px solid var(--inactive-color);
+            border-radius: 50%;
+            height: 25px;
+            width: 25px;
+            cursor: pointer;
+            background-color: transparent;
+          }
+
+          form:has(input[id="create-new-todo"]:not(:placeholder-shown)) {
+            button[aria-label="create-a-new-todo"]:hover {
+              background-repeat: no-repeat;
+              background-position: center;
+              background-image: url(./images/icon-check.svg), var(--check-background);
+            }
+          }
+
+          label[for="create-new-todo"] {
+            justify-self: start;
+          }
+
+          input[id="create-new-todo"] {
+            appearance: none;
+            background-color: transparent;
+            box-sizing: border-box;
+            padding: 0px 10px;
+            border-color: transparent;
+          }
+
+          input[id="create-new-todo"]::placeholder {
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 1.1em;
+          }
+        </style>
+      </template>
+    </create-new-todo-component>
+
+    <todos-component>
+      <template shadowrootmode="open">
+        <section class="todos">
+
+          <section class="all-todos">
+            <slot name="todos">
+
+            </slot>
+            <section class="todo-options">
+
+              <section class="display">
+                <label for="display-all">
+                  All
+                  <input type="radio" name="display-options" id="display-all" checked>
+                </label>
+                <label for="display-active">
+                  Active
+                  <input type="radio" name="display-options" id="display-active">
+                </label>
+                <label for="display-completed">
+                  Completed
+                  <input type="radio" name="display-options" id="display-completed">
+                </label>
+              </section>
+              <button id="clear-completed">Clear completed</button>
+            </section>
+          </section>
+          <section class="display-options-mobile">
+            <section class="display">
+              <label for="display-all">
+                All
+                <input type="radio" name="display-options" id="display-all" checked>
+              </label>
+              <label for="display-active">
+                Active
+                <input type="radio" name="display-options" id="display-active">
+              </label>
+              <label for="display-completed">
+                Completed
+                <input type="radio" name="display-options" id="display-completed">
+              </label>
+            </section>
+          </section>
+        </section>
+        <style>
+          section[class="all-todos"] {
+            display: grid;
+            background-color: var(--todo-background);
+            min-height: 40cqh;
+            box-sizing: border-box;
+            padding: 20px 0px;
+            counter-reset: todo-count;
+            width: var(--todo-width);
+          }
+
+          section[class="todo-options"] {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            align-self: end;
+            text-align: center;
+            box-sizing: border-box;
+            padding: 10px 20px;
+            color: var(--dark-grayish-blue);
+          }
+
+          section[class="todo-options"]::before {
+            content: counter(todo-count) var(--filter-message);
+            text-align: start;
+          }
+
+          section[class="display"] {
+            grid-column: 2;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+          }
+
+          button[id="clear-completed"] {
+            grid-column: 3;
+            background-color: transparent;
+            width: min-content;
+            text-wrap: nowrap;
+            justify-self: end;
+            border-color: transparent;
+            color: var(--dark-grayish-blue);
+            cursor: pointer;
+          }
+
+          label[for="display-all"],
+          label[for="display-active"],
+          label[for="display-completed"] {
+            cursor: pointer;
+          }
+
+          input[name="display-options"] {
+            display: none;
+          }
+
+          label:has(input[name="display-options"]:checked) {
+            color: var(--bright-blue);
+          }
+
+          :host:has(input[id="display-all"]:checked) {
+            --filter-message: " items total";
+          }
+
+          :host:has(input[id="display-active"]:checked) {
+            --filter-message: " items left";
+
+            todo-component[complete="true"] {
+              display: none;
+            }
+          }
+
+          :host:has(input[id="display-completed"]:checked) {
+            --filter-message: " items completed";
+
+            todo-component:not(todo-component[complete="true"]) {
+              display: none;
+            }
+          }
+
+          slot[name="todos"] {
+            display: grid;
+            grid-auto-rows: min-content;
+            width: var(--todo-width);
+          }
+
+          span[class="no-todos"] {
+            place-self: center;
+          }
+
+          section[class="display-options-mobile"] {
+            display: none;
+          }
+
+          todo-component {
+            padding: 50px 0px;
+            border-bottom: 2px solid var(--very-dark-grayish-blue);
+            border-width: thin;
+          }
+
+          @container(inline-size < 1000px) {
+            section[class="display-options-mobile"] {
+              display: grid;
+              gap: 10px;
+              text-align: center;
+              box-sizing: border-box;
+              padding: 10px 20px;
+              color: var(--dark-grayish-blue);
+              margin-top: 50px;
+              width: 100%;
+              place-content: center;
+              background-color: var(--todo-background);
+              height: 50px;
+            }
+
+            section[class="todo-options"] section[class="display"] {
+              display: none;
+            }
+
+          }
+        </style>
+      </template>
+    </todos-component>
+
+    <p>
+      Drag and drop to reorder list
+    </p>
+  </main>
+
+
+
+  <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
+    Coded by <a href="https://github.com/MaudePod">Maude Pod</a>.
+  </div>
+</body>
+
+</html>
