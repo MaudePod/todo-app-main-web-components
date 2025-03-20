@@ -94,8 +94,8 @@
 
           input[id="create-new-todo"]::placeholder {
             font-weight: 700;
-            color: var(--text-color);
-            font-size: 1.1em;
+            color: var(--dark-grayish-blue);
+            font-size: 1.2em;
           }
         </style>
       </template>
@@ -125,22 +125,32 @@
                   <input type="radio" name="display-options" id="display-completed">
                 </label>
               </section>
-              <button id="clear-completed">Clear completed</button>
+              <button id="clear-completed" popovertarget="confirm-delete">Clear completed</button>
+              <section id="confirm-delete" popover>
+                <span id='delete-message'>
+                  Clear all complted todos?
+                  <ul class="completed-todos"></ul>
+                </span>
+                <section class="buttons">
+                  <button popovertarget="confirm-delete">Cancel</button>
+                  <button id="delete-todo" popovertarget="confirm-delete">Delete</button>
+                </section>
+              </section>
             </section>
           </section>
           <section class="display-options-mobile">
             <section class="display">
-              <label for="display-all">
+              <label for="display-all-mobile">
                 All
-                <input type="radio" name="display-options" id="display-all" checked>
+                <input type="radio" name="display-options-mobile" id="display-all-mobile" checked>
               </label>
-              <label for="display-active">
+              <label for="display-active-mobile">
                 Active
-                <input type="radio" name="display-options" id="display-active">
+                <input type="radio" name="display-options-mobile" id="display-active-mobile">
               </label>
-              <label for="display-completed">
+              <label for="display-completed-mobile">
                 Completed
-                <input type="radio" name="display-options" id="display-completed">
+                <input type="radio" name="display-options-mobile" id="display-completed-mobile">
               </label>
             </section>
           </section>
@@ -196,18 +206,22 @@
             cursor: pointer;
           }
 
+          input[name="display-options-mobile"],
           input[name="display-options"] {
             display: none;
           }
 
+          label:has(input[name="display-options-mobile"]:checked),
           label:has(input[name="display-options"]:checked) {
             color: var(--bright-blue);
           }
 
+          :host:has(input[id="display-all-mobile"]:checked),
           :host:has(input[id="display-all"]:checked) {
             --filter-message: " items total";
           }
 
+          :host:has(input[id="display-active-mobile"]:checked),
           :host:has(input[id="display-active"]:checked) {
             --filter-message: " items left";
 
@@ -216,6 +230,7 @@
             }
           }
 
+          :host:has(input[id="display-completed-mobile"]:checked),
           :host:has(input[id="display-completed"]:checked) {
             --filter-message: " items completed";
 
@@ -236,6 +251,38 @@
 
           section[class="display-options-mobile"] {
             display: none;
+          }
+
+          section[id="confirm-delete"] {
+            place-items: center;
+            width: 500px;
+            height: 200px;
+            text-align: center;
+            border: 0;
+          }
+
+          section[id="confirm-delete"]:popover-open {
+            display: grid;
+            background-color: var(--background-color);
+          }
+
+          section[class=buttons] {
+            width: 80%;
+            display: flex;
+            justify-content: space-around;
+          }
+
+          section[class=buttons] button {
+            cursor: pointer;
+            padding: 5px 10px;
+          }
+
+          section[class=buttons] button:hover {
+            font-weight: 700;
+          }
+
+          li {
+            list-style-image: url(./images/icon-check.svg);
           }
 
           todo-component {
@@ -267,13 +314,10 @@
         </style>
       </template>
     </todos-component>
-
     <p>
       Drag and drop to reorder list
     </p>
   </main>
-
-
 
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.

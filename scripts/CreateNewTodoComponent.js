@@ -8,7 +8,6 @@ export default class CreateNewTodoComponent extends HTMLElement {
     connectedCallback(
     ) {
     this.#form = this.#internals.shadowRoot.querySelector("form");
-
         this.#internals.shadowRoot.querySelector('button[aria-label="create-a-new-todo"]').addEventListener('click', (event)=>{
             event.preventDefault()
         });
@@ -18,13 +17,13 @@ export default class CreateNewTodoComponent extends HTMLElement {
             this.storeTodo(description,todoId);
             window.dispatchEvent(new CustomEvent("Todo created", {}));
             this.#form.reset();
-        });
- 
+        }); 
     }
     disconnectedCallback() {
     }
     storeTodo=(description,todoId)=>{
-        localStorage.setItem(todoId,JSON.stringify({description:description,complete:false}));
+        const order=localStorage.length;
+        localStorage.setItem(todoId,JSON.stringify({description:description,complete:false,order:order}));
     }
     static get observedAttributes() {
         return [

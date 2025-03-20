@@ -1,6 +1,5 @@
 const template = document.createElement("template");
-template.innerHTML = `
-          
+template.innerHTML = `          
            <section class="todo">
               <label for="todo" aria-label="mark as Completed">
                 <input type="checkbox" name="todo" id="todo">
@@ -29,6 +28,7 @@ template.innerHTML = `
                   counter-increment: todo-count  1;
                   width: var(--todo-width);
                   cursor:grab;
+                  font-size:1.5em;
               }
 
               input[name="todo"] {
@@ -114,55 +114,58 @@ template.innerHTML = `
             </style>
 `;
 export default class TodoComponent extends HTMLElement {
-    constructor() {
-        super();
+  constructor() {
+    super();
+  }
+  #todoId;
+  connectedCallback(
+  ) {
+    if (!this.shadowRoot) {
+      const shadowRoot = this.attachShadow({ mode: "open" })
+      shadowRoot.appendChild(template.content.cloneNode(true));
     }
-    #todoId;
-    connectedCallback(
-    ) {
-        const shadowRoot = this.attachShadow({ mode: "open" })
-        shadowRoot.appendChild(template.content.cloneNode(true));
-        if (this.hasAttribute('todo-id')) {
-            this.#todoId = this.getAttribute('todo-id');
-        }
-        if (this.hasAttribute('description')) {
-            const description = this.getAttribute('description');
-            this.shadowRoot.querySelector("span[class='todo-detail']").innerHTML = description;
-            this.shadowRoot.querySelector("span[id='delete-message']").innerHTML = "Delete \"" + description + "\" ?";
-        }
-        if (this.hasAttribute('complete')) {
-          const complete = this.getAttribute('complete');
-          if(complete==="true"){
-            this.shadowRoot.querySelector('input[id="todo"]').checked=true;  
-          }
+    if (this.hasAttribute('todo-id')) {
+      this.#todoId = this.getAttribute('todo-id');
+    }
+    if (this.hasAttribute('description')) {
+      const description = this.getAttribute('description');
+      this.shadowRoot.querySelector("span[class='todo-detail']").innerHTML = description;
+      this.shadowRoot.querySelector("span[id='delete-message']").innerHTML = "Delete \"" + description + "\" ?";
+    }
+    if (this.hasAttribute('complete')) {
+      const complete = this.getAttribute('complete');
+      if (complete === "true") {
+        this.shadowRoot.querySelector('input[id="todo"]').checked = true;
       }
-      
-        this.shadowRoot.querySelector('input[id="todo"]').addEventListener('click', (event) => {
-          if(this.shadowRoot.querySelector('input[id="todo"]').checked){
-            localStorage.setItem(this.#todoId,JSON.stringify({description:this.getAttribute('description'),complete:true}));
-          }else{
-            localStorage.setItem(this.#todoId,JSON.stringify({description:this.getAttribute('description'),complete:false}));
-          }
-          window.dispatchEvent(new CustomEvent("Todo completed", {}));
-      });
-        this.shadowRoot.querySelector('button[id="delete-todo"]').addEventListener('click', (event) => {
-            localStorage.removeItem(this.#todoId);
-            window.dispatchEvent(new CustomEvent("Todo deleted", {}));
-        });
-
     }
 
-    disconnectedCallback() {
-    }
+    this.shadowRoot.querySelector('input[id="todo"]').addEventListener('click', (event) => {
+      if (this.shadowRoot.querySelector('input[id="todo"]').checked) {
+        localStorage.setItem(this.#todoId, JSON.stringify({ description: this.getAttribute('description'), complete: true, order: this.getAttribute('order') }));
+      } else {
+        localStorage.setItem(this.#todoId, JSON.stringify({ description: this.getAttribute('description'), complete: false, order: this.getAttribute('order') }));
+      }
+      window.dispatchEvent(new CustomEvent("Todo completed", {}));
+    });
+    this.shadowRoot.querySelector('button[id="delete-todo"]').addEventListener('click', (event) => {
+      localStorage.removeItem(this.#todoId);
+      window.dispatchEvent(new CustomEvent("Todo deleted", {}));
+    });
 
-    static get observedAttributes() {
-        return [
-            'todo-id',
-            'description',
-            'complete'
-        ];
-    }
+  }
+
+  disconnectedCallback() {
+  }
+
+  static get observedAttributes() {
+    return [
+      'todo-id',
+      'description',
+      'complete',
+      'order'
+    ];
+  }
 }
 if (!customElements.get("todo-component")) {
-    customElements.define("todo-component", TodoComponent);
+  customElements.define("todo-component", TodoComponent);
 }

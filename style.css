@@ -50,17 +50,19 @@ body {
     background-color: var(--background-color);
     font-family: 'Josefin_Sans';
     margin: 0;
+    position: relative;
 }
 
 main {
     display: grid;
-    min-height: 100cqh;
+    min-height: 90cqh;
     background: var(--background-image);
     background-size: 100% 25%;
     background-repeat: no-repeat;
     justify-content: center;
     grid-auto-rows: min-content;
     row-gap: 50px;
+    margin-bottom: 50px;
 }
 
 header {
@@ -104,11 +106,6 @@ input[name="theme"] {
     display: none;
 }
 
-
-input[id="dark-theme"] {}
-
-input[id="light-theme"] {}
-
 :root:has(input[id="dark-theme"]:checked) {
     color-scheme: dark;
     --text-color: var(--light-grayish-blue);
@@ -137,14 +134,33 @@ input[id="light-theme"] {}
 :root:has(todo-component[todo="completed"]) {
     todo-component[todo="completed"] {}
 }
-p{
+
+p {
     text-align: center;
 }
+
+div[class="attribution"] {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
 @container (inline-size < 1000px) {
-    main{
+    main {
         --todo-width: 90cqw;
     }
+
+    :root:has(input[id="dark-theme"]:checked) {
+        --background-image: url(./images/bg-mobile-dark.jpg);
+    }
+
+    :root:has(input[id="light-theme"]:checked) {
+        --background-image: url(./images/bg-mobile-light.jpg);
+    }
 }
+
 @starting-style {
 
     body,
@@ -171,24 +187,5 @@ p{
     section[id="confirm-delete"] {
         transition: ease-in-out 1.5s;
 
-    }
-}
-
-@media(prefers-color-scheme: dark) {
-    :root {
-        --text-color: var(--light-grayish-blue);
-        --background-color: var(--very-dark-blue);
-        --background-image: url(./images/bg-desktop-dark.jpg);
-        --todo-background: var(--very-dark-desaturated-blue);
-        --inactive-color: var(--dark-grayish-blue);
-    }
-
-}
-
-@media(prefers-color-scheme: light) {
-    :root {
-        --text-color: var(--very-dark-grayish-blue);
-        --background-color: var(--very-light-gray);
-        --background-image: url(./images/bg-desktop-light.jpg);
     }
 }
