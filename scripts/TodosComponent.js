@@ -19,6 +19,9 @@ export default class TodosComponent extends HTMLElement {
         window.addEventListener('Todo completed', (event) => {
             this.getTodos();
         });
+        window.addEventListener('Todo updated', (event) => {
+            this.getTodos();
+        });
         this.shadowRoot.querySelector('button[id="clear-completed"]').addEventListener('click', (event) => {
             this.getTodos();
             this.setListOfCompletedTodos();
