@@ -29,7 +29,7 @@ export default class TodosComponent extends HTMLElement {
         this.shadowRoot.querySelector('button[id="delete-todo"]').addEventListener('click', (event) => {
             [...this.shadowRoot.querySelectorAll('todo-component[complete="true"]')].forEach(todo => {
                 const todoId = todo.getAttribute('todo-id');
-                localStorage.removeItem(todoId);
+                sessionStorage.removeItem(todoId);
             })
             this.getTodos();
             this.updateTheOrderOfTodos();
@@ -69,14 +69,14 @@ export default class TodosComponent extends HTMLElement {
             const complete = todo.getAttribute('complete');
             const order = index;
             const updatedTodo = { description: description, complete: complete, order: order };
-            localStorage.setItem(todoId, JSON.stringify(updatedTodo));
+            sessionStorage.setItem(todoId, JSON.stringify(updatedTodo));
         }
     }
     createTodoComponents = () => {
         let html = "";
         const todos = [];
-        Object.keys(localStorage).forEach(function (todoId) {
-            const todo = JSON.parse(localStorage.getItem(todoId));
+        Object.keys(sessionStorage).forEach(function (todoId) {
+            const todo = JSON.parse(sessionStorage.getItem(todoId));
             const updatedTodo = { todoId: todoId, description: todo.description, complete: todo.complete, order: todo.order };
             todos[todo.order] = updatedTodo;
         });
@@ -98,7 +98,7 @@ export default class TodosComponent extends HTMLElement {
             `;
             }
         }
-        if (localStorage.length == 0 || html == "") {
+        if (sessionStorage.length == 0 || html == "") {
             html = `
                         <span class="no-todos">
                             No todos have been created

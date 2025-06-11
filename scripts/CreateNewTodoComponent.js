@@ -22,8 +22,8 @@ export default class CreateNewTodoComponent extends HTMLElement {
     disconnectedCallback() {
     }
     storeTodo=(description,todoId)=>{
-        const order=localStorage.length;
-        localStorage.setItem(todoId,JSON.stringify({description:description,complete:false,order:order}));
+        const order=sessionStorage.length;
+        sessionStorage.setItem(todoId,JSON.stringify({description:description,complete:false,order:order}));
     }
     static get observedAttributes() {
         return [

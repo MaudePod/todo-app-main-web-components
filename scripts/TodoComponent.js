@@ -142,22 +142,22 @@ export default class TodoComponent extends HTMLElement {
     this.shadowRoot.querySelector('span[class="todo-detail"]').addEventListener('blur', (event) => {
       const description = this.shadowRoot.querySelector('span[class="todo-detail"]').innerHTML;
       if (this.shadowRoot.querySelector('input[id="todo"]').checked) {
-        localStorage.setItem(this.#todoId, JSON.stringify({ description: description, complete: true, order: this.getAttribute('order') }));
+        sessionStorage.setItem(this.#todoId, JSON.stringify({ description: description, complete: true, order: this.getAttribute('order') }));
       } else {
-        localStorage.setItem(this.#todoId, JSON.stringify({ description: description, complete: false, order: this.getAttribute('order') }));
+        sessionStorage.setItem(this.#todoId, JSON.stringify({ description: description, complete: false, order: this.getAttribute('order') }));
       }
       window.dispatchEvent(new CustomEvent("Todo updated", {}));
     });
     this.shadowRoot.querySelector('input[id="todo"]').addEventListener('click', (event) => {
       if (this.shadowRoot.querySelector('input[id="todo"]').checked) {
-        localStorage.setItem(this.#todoId, JSON.stringify({ description: this.getAttribute('description'), complete: true, order: this.getAttribute('order') }));
+        sessionStorage.setItem(this.#todoId, JSON.stringify({ description: this.getAttribute('description'), complete: true, order: this.getAttribute('order') }));
       } else {
-        localStorage.setItem(this.#todoId, JSON.stringify({ description: this.getAttribute('description'), complete: false, order: this.getAttribute('order') }));
+        sessionStorage.setItem(this.#todoId, JSON.stringify({ description: this.getAttribute('description'), complete: false, order: this.getAttribute('order') }));
       }
       window.dispatchEvent(new CustomEvent("Todo completed", {}));
     });
     this.shadowRoot.querySelector('button[id="delete-todo"]').addEventListener('click', (event) => {
-      localStorage.removeItem(this.#todoId);
+      sessionStorage.removeItem(this.#todoId);
       window.dispatchEvent(new CustomEvent("Todo deleted", {}));
     });
 
